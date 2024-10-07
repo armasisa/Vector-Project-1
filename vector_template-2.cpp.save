@@ -2,8 +2,6 @@
 #include<string>
 #include<vector>
 #include <iomanip>
-#include <algorithm>
-
 template <typename T> class Item{
     public:
         T name;
@@ -50,21 +48,20 @@ template<typename T> class Inventory{
     }
 
     void removeItem(const T& itemName) {
-        auto it = std::remove_if(items.begin(), items.end(), 
-            [&itemName](const Item<T>& item) {
-                return item.name == itemName;
-    });
-        
-        if (it != items.end()) {
-            items.erase(it, items.end());
+        for (auto it = items.begin(); it != items.end(); ++it) {
+            if (it->name == itemName) {
+                items.erase(it);
+                std::cout << "remove item: " << itemName << std::endl;
+                return;
+            }
         }
+        throw std::runtime_error("Item not found: " + itemName);
     }
 
     int Total() {
         int totalQuantity = 0;
         for (const auto& item : items) {
             totalQuantity += item.quantity;
-            std::cout << "Total Number of Items in inventory = " << totalQuantity << "\n";
         }
         return totalQuantity;
     }
@@ -124,7 +121,9 @@ template<typename T>class AppointmentSystem{
             }
         }
         appts.push_back(appointment);
-
+        std::cout << "Appointment scheduled for " << appointment.c_name 
+                  << " on " << appointment.ap_date 
+                  << " at " << appointment.ap_time << std::endl;
     }
 
         int Total_appointments(const T& date, const T& time) {
@@ -136,13 +135,13 @@ template<typename T>class AppointmentSystem{
         }
         return count;
     }
-
     void removeRecent() {
         if (appts.empty()) {
             std::cout << "No appointments to remove! " << std::endl;
             return;
         }
         appts.pop_back();
+        std::cout << "Recent appointment removed." << std::endl;
     }
 
 
@@ -219,4 +218,6 @@ int main(){
     s1.schedule(a4);
     s1.removeRecent();
     s1.display();
-};
+};^X
+
+
